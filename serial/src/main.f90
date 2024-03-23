@@ -32,7 +32,7 @@ Program main
 
    print *,"L =", L,"M =", M,"a=", a
 
-   cutoff = 2.5
+   cutoff = L/2.
 
    ! """"
    ! ii) Initialize system and run simulation using velocity Verlet

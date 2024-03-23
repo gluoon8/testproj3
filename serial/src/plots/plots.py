@@ -1,42 +1,54 @@
 import numpy as np
 import os
-
 import matplotlib.pyplot as plt
 
 # Set current directory as default path
-path = "/Users/manel/EIA-G3-1/src/plots"
-
+path = "/home/manel/Project-III/serial"
 os.chdir(path)
 
-data = np.loadtxt('thermodynamics.dat', skiprows=3)
 
-# Replace inf values with NaN
-data[data == np.inf] = np.nan
-data[data == -np.inf] = np.nan
+# Load data from files
+energy = np.loadtxt('energy_verlet.dat', skiprows=4, dtype=float)
+temperature = np.loadtxt('Temperatures_verlet.dat', skiprows=1, dtype=float)
 
-# Plot the data with matplotlib
 
 #
-#       PLOT ENERGIES vs STEP
+#       PLOT ENERGIES vs time
 #
 
 plt.figure(figsize=(10, 5))
-plt.plot(data[:, 0], data[:, 1], label='Potential Energy')
-plt.plot(data[:, 0], data[:, 2], label='Kinetic Energy')
-plt.plot(data[:, 0], data[:, 3], label='Total Energy')
+plt.plot(energy[:, 0], energy[:, 1], label='Potential Energy')
+plt.plot(energy[:, 0], energy[:, 2], label='Kinetic Energy')
+plt.plot(energy[:, 0], energy[:, 3], label='Total Energy')
 plt.xlabel('Step')
 plt.ylabel('Energy')
 plt.legend()
 plt.title('Energy vs Step')
 plt.show()
 
+
 #
-#      PLOT TEMPERATURE vs STEP
+#      PLOT MOMENTUM vs time
 #
 
-plt.figure(figsize=(10, 5))
-plt.xlabel('Step')
+plt.figure()
+plt.plot(energy[:, 0], energy[:, 4], label='Momentum')
+plt.ylim(np.mean(energy[:, 4])-1, np.mean(energy[:, 4])+1)
+plt.xlabel('Time')
+plt.ylabel('Momentum')
+plt.legend()
+plt.title('Momentum vs Time')
+plt.show()
+
+
+#
+#      PLOT TEMPERATURE vs time
+#
+
+plt.figure()
+plt.plot(temperature[:, 0], temperature[:, 1], label='Temperature')
+plt.xlabel('Time')
 plt.ylabel('Temperature')
 plt.legend()
-plt.title('Temperature vs Step')
+plt.title('Temperature vs Time')
 plt.show()
