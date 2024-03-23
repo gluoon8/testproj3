@@ -11,7 +11,7 @@ Program main
    integer, parameter :: N = 125
    real(8), dimension(N, 3) :: r, r_ini, vel, vel_ini, r_out, v_fin
    integer :: step, i, dt_index, Nsteps
-   real(8) :: pot, K_energy, L, cutoff, M, a, Temp, dt, absV, p, tini, tfin
+   real(8) :: pot, K_energy, L, cutoff, M, a, Temp, dt, absV, p, tini, tfin, Pressure
    real(8), dimension(3) :: dt_list
    integer, allocatable :: seed(:)
    integer :: nn
@@ -32,7 +32,7 @@ Program main
 
    print *,"L =", L,"M =", M,"a=", a
 
-   cutoff = L/2.
+   cutoff = 2.
 
    ! """"
    ! ii) Initialize system and run simulation using velocity Verlet
@@ -95,11 +95,16 @@ Program main
       call time_step_vVerlet(r, vel, pot, N, L, cutoff, dt)
       call kinetic_energy(vel, K_energy, N)
       call momentum(vel, p, N)
+
       ! Calculate temperature
       Temp = inst_temp(N, K_energy)
       write (77, *) step*dt, Temp
-      write (44, *) step*dt, pot, K_energy, pot + K_energy, p
+
+      ! calculate pressure
+      Pressure = rho*Temp + (1.d0/(3.0d0*(L**3.0d0)))*pot      
+      write (44, *) step*dt, pot, K_energy, pot + K_energy, p, Pressure
       !        print*, K_energy
+
       if (mod(step, 1000) .eq. 0) then
          print *, real(step)/Nsteps
       end if
