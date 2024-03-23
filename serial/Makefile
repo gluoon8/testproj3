@@ -14,10 +14,10 @@ help:
 	@grep "^##" Makefile
 
 # ~ LINKING ~
-## 	· make: Compiles the program.
+## 	· make comp: Compiles the program.
 ##
-
-all: MD.x
+.PHONY.: comp
+comp: MD.x
 MD.x:  pbc.o integrators.o forces.o initialize.o  main.o
 	$(FC) $(F_FLAGS) $(COMP_D_FLAGS) $(COMP_R_FLAGS) $^ -o $@
 
@@ -30,6 +30,13 @@ MD.x:  pbc.o integrators.o forces.o initialize.o  main.o
 .PHONY.: run
 run: MD.x
 	./MD.x
+
+# ~ CLEANING OUTPUT FILES ~
+## 	· make out: Removes ONLY the output files.
+##
+.PHONY.: out
+out:
+	rm -f *.dat
 
 # ~ COMPILING ~
 
@@ -48,3 +55,12 @@ initialize.o: initialization/initialize.f90
 main.o: main.f90
 	$(FC) -c $^
 
+# ~ PLOTS ~
+## 	· make plot: Plots the output data:
+##		- Epot, Ekin, Etot vs time
+##		- Momentum vs time
+##		- T , pressure vs time
+
+.PHONY.: plot
+plot:
+	python3 ./src/plots/plots.py

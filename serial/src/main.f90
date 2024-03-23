@@ -16,7 +16,7 @@ Program main
    integer, allocatable :: seed(:)
    integer :: nn
 
-   dt = 1e-4
+   dt = 1e-5
 
    call random_seed(size=nn)
    allocate (seed(nn))
@@ -25,7 +25,7 @@ Program main
    deallocate (seed)
 
    L = (N/rho)**(1./3.)
-   Temp = 100.d0
+   Temp = 1.4d0
 
    M = N**(1./3.)
    a = L/(M)
@@ -78,9 +78,8 @@ Program main
    write (44, *) ""
    write (44, *) "dt = ", dt
    write (44, *) "#  time , pot, kin , total , momentum"
-   write (77, *) "#  time , Temp"
+   write (77, *) "#  time , Temp, Pressure"
    print *, "dt = ", dt
-   print*,  "# time , pot, kin , total , momentum"
 
    Nsteps = int((tfin - tini)/dt)
 
@@ -88,21 +87,23 @@ Program main
    r = r_ini
    vel = vel_ini
    
+   Nsteps = 20000
 
    do step = 1, Nsteps
    
-      print*, "step = ", step
+      !print*, "step = ", step
       call time_step_vVerlet(r, vel, pot, N, L, cutoff, dt)
       call kinetic_energy(vel, K_energy, N)
       call momentum(vel, p, N)
 
       ! Calculate temperature
-      Temp = inst_temp(N, K_energy)
-      write (77, *) step*dt, Temp
+      Temp = inst_temp(N, K_energy)      
+      Pressure = rho*Temp + (1.d0/(3.0d0*(L**3.0d0)))*pot      
+      write (77, *) step*dt, Temp, Pressure
 
       ! calculate pressure
       Pressure = rho*Temp + (1.d0/(3.0d0*(L**3.0d0)))*pot      
-      write (44, *) step*dt, pot, K_energy, pot + K_energy, p, Pressure
+      write (44, *) step*dt, pot, K_energy, pot + K_energy, p
       !        print*, K_energy
 
       if (mod(step, 1000) .eq. 0) then

@@ -38,6 +38,7 @@ plt.xlabel('Time')
 plt.ylabel('Momentum')
 plt.legend()
 plt.title('Momentum vs Time')
+plt.savefig('Momentum.png')
 plt.show()
 
 
@@ -51,4 +52,19 @@ plt.xlabel('Time')
 plt.ylabel('Temperature')
 plt.legend()
 plt.title('Temperature vs Time')
+plt.savefig('Temperature.png')
+plt.show()
+
+
+#
+#      PLOT PRESSURE vs time
+#
+
+plt.figure()
+plt.plot(temperature[:, 0], temperature[:, 2], label='Pressure')
+plt.xlabel('Time')
+plt.ylabel('Pressure')
+plt.legend()
+plt.title('Pressure vs Time')
+plt.savefig('Pressure.png')
 plt.show()
