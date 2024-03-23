@@ -3,13 +3,15 @@ import os
 import matplotlib.pyplot as plt
 
 # Set current directory as default path
-path = "/home/manel/Project-III/serial"
-os.chdir(path)
+# path = "/home/manel/Project-III/serial"
+# Set path to the directory where the script is located
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 # Load data from files
-energy = np.loadtxt('energy_verlet.dat', skiprows=4, dtype=float)
-temperature = np.loadtxt('Temperatures_verlet.dat', skiprows=1, dtype=float)
+energy = np.loadtxt('../../energy_verlet.dat', skiprows=4, dtype=float)
+temperature = np.loadtxt('../../Temperatures_verlet.dat', skiprows=1, dtype=float)
 
 
 #
@@ -24,6 +26,7 @@ plt.xlabel('Step')
 plt.ylabel('Energy')
 plt.legend()
 plt.title('Energy vs Step')
+plt.savefig('Energies.png')
 plt.show()
 
 
