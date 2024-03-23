@@ -31,6 +31,7 @@ MD.x:  pbc.o integrators.o forces.o initialize.o  main.o
 run: MD.x
 	./MD.x
 
+
 # ~ CLEANING OUTPUT FILES ~
 ## 	· make out: Removes ONLY the output files.
 ##
@@ -63,4 +64,4 @@ main.o: main.f90
 
 .PHONY.: plot
 plot:
-	python3 ./src/plots/plots.py
+	@python3 ./src/plots/plots.py
