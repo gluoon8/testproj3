@@ -97,10 +97,10 @@ do jj=6,6
 !   Normalize gdr
 	pi=3.14159265359
 	do i=1,nhis
-	 ri(i)=delg*DFLOAT(i -1) !distance r
-	 vb = ((i+1)**3-i**3)*delg**3 !volume between bin i+1 and i
-	 nid = (4.0/3.0)*pi*vb*rho !number of ideal gas part . in vb
-	 g(i) =g(i)/(500000*natoms*nid) !normalize g(r)
+	 ri(i)=delg*DFLOAT(i -1) 			!distance r
+	 vb = ((i+1)**3-i**3)*delg**3 		!volume between bin i+1 and i
+	 nid = (4.0/3.0)*pi*vb*rho 			!number of ideal gas part . in vb
+	 g(i) =g(i)/(500000*natoms*nid) 	!normalize g(r)
 	write(jj+6,*)  ri(i), g(i)
 	enddo
 	close(jj+6)
@@ -169,15 +169,15 @@ force = 24.d0*(2.d0*ynvrr12-ynvrr6)*ynvrr1
 pot = 4.d0*(ynvrr12-ynvrr6) - 4.d0*(1./(rc**12)-1./(rc**6))
 press = force*rr
   do l = 1,3
-    accel(is,l) = accel(is,l) - forcedist*rij(l)
+    accel(is,l)	 = accel(is,l) - forcedist*rij(l)
     accel(js,l) = accel(js,l) + forcedist*rij(l)
  end do
 end if
 
 ! 	Part de gdr
-if (rr.lt.boxlength/2.) then !only within half the box length
- ig = int(rr/delg)
- g(ig) = g(ig) + 2 !contribution for particle i and j
+if (rr.lt.boxlength/2.) then 	!only within half the box length
+ ig = int(rr/delg)				!index del bin 
+ g(ig) = g(ig) + 2 				!contribution for particle i and j
  endif
 
 return
