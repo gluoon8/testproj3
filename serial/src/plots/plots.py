@@ -19,9 +19,9 @@ temperature = np.loadtxt('../../Temperatures_verlet.dat', skiprows=1, dtype=floa
 #
 
 plt.figure(figsize=(10, 5))
-plt.plot(energy[:, 0], energy[:, 1], label='Potential Energy')
-plt.plot(energy[:, 0], energy[:, 2], label='Kinetic Energy')
-plt.plot(energy[:, 0], energy[:, 3], label='Total Energy')
+plt.plot(energy[:, 0], energy[:, 1], label='Potential Energy', color='coral')
+plt.plot(energy[:, 0], energy[:, 2], label='Kinetic Energy', color='darkorange')
+plt.plot(energy[:, 0], energy[:, 3], label='Total Energy', color='crimson')
 plt.xlabel('Step')
 plt.ylabel('Energy')
 plt.legend()
@@ -35,7 +35,7 @@ plt.show()
 #
 
 plt.figure()
-plt.plot(energy[:, 0], energy[:, 4], label='Momentum')
+plt.plot(energy[:, 0], energy[:, 4], label='Momentum', color='mediumaquamarine')
 plt.ylim(np.mean(energy[:, 4])-1, np.mean(energy[:, 4])+1)
 plt.xlabel('Time')
 plt.ylabel('Momentum')
