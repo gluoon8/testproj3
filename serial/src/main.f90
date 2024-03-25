@@ -13,10 +13,16 @@ Program main
    integer :: step, i, dt_index, Nsteps
    real(8) :: pot, K_energy, L, cutoff, M, a, Temp, dt, absV, p, tini, tfin, Pressure
    real(8), dimension(3) :: dt_list
+
+   ! added by me
+   real(8) :: delg, pi, vb, nid
+   integer :: iii, nhis, jj
+   real(8), dimension(100) :: g, ri
+   ! added by me
    integer, allocatable :: seed(:)
    integer :: nn
 
-   dt = 1e-4
+   dt = 1e-5
 
    call random_seed(size=nn)
    allocate (seed(nn))
@@ -25,7 +31,7 @@ Program main
    deallocate (seed)
 
    L = (N/rho)**(1./3.)
-   Temp = 100.d0
+   Temp = 1.4d0
 
    M = N**(1./3.)
    a = L/(M)
@@ -68,6 +74,7 @@ Program main
    open (44, file="energy_verlet.dat")
    open (77, file="Temperatures_verlet.dat")
    open (23, file="vel_fin_Verlet.dat")
+   open (88, file="gdr.dat")
 
    ! Time parameters, initial and final time (input.txt)
    tini = 0
@@ -78,9 +85,9 @@ Program main
    write (44, *) ""
    write (44, *) "dt = ", dt
    write (44, *) "#  time , pot, kin , total , momentum"
-   write (77, *) "#  time , Temp"
+   write (77, *) "#  time , Temp, Pressure"
+   write (88, *) "# r , g(r)"
    print *, "dt = ", dt
-   print*,  "# time , pot, kin , total , momentum"
 
    Nsteps = int((tfin - tini)/dt)
 
@@ -88,6 +95,7 @@ Program main
    r = r_ini
    vel = vel_ini
    
+   Nsteps = 20000
 
    do step = 1, Nsteps
 
@@ -95,13 +103,22 @@ Program main
       call kinetic_energy(vel, K_energy, N)
       call momentum(vel, p, N)
 
+      ! inici gdr
+      nhis = 100
+      delg =L/(2*nhis)                 !bin size
+      do iii = 1,nhis                  !nhis = total number of bins
+         g(iii) = 0.0                  ! g(r) = 0
+         ri(iii)=delg*DFLOAT(iii -1)   !distance r
+      end do
+
       ! Calculate temperature
-      Temp = inst_temp(N, K_energy)
-      write (77, *) step*dt, Temp
+      Temp = inst_temp(N, K_energy)      
+      Pressure = rho*Temp + (1.d0/(3.0d0*(L**3.0d0)))*pot      
+      write (77, *) step*dt, Temp, Pressure
 
       ! calculate pressure
       Pressure = rho*Temp + (1.d0/(3.0d0*(L**3.0d0)))*pot      
-      write (44, *) step*dt, pot, K_energy, pot + K_energy, p, Pressure
+      write (44, *) step*dt, pot, K_energy, pot + K_energy, p
       !        print*, K_energy
 
       if (mod(step, 1000) .eq. 0) then
@@ -116,6 +133,18 @@ Program main
 
 
    end do
+
+
+   ! Calculate g(r)      
+   pi=3.14159265359
+   do i=1,nhis
+      ri(i)=delg*DFLOAT(i -1) 			!distance r
+      vb = ((i+1)**3-i**3)*delg**3 		!volume between bin i+1 and i
+      nid = (4.0/3.0)*pi*vb*rho 			!number of ideal gas part . in vb
+      g(i) =g(i)/(500000*N*nid) 	!normalize g(r)
+      write(88,*)  ri(i), g(i)
+   enddo
+   close(88)
 
    ! Write final positions to file to plot the distribution of positions
    write (55, *) "#  Positions components (x, y, z) for the last 10% of the simulation"
